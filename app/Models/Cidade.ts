@@ -1,4 +1,6 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, HasOne, ManyToMany, column, hasOne, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Estado from './Estado'
+import Estabelecimento from './Estabelecimento'
 
 export default class Cidade extends BaseModel {
   @column({ isPrimary: true })
@@ -12,4 +14,19 @@ export default class Cidade extends BaseModel {
 
   @column()
   public ativo: boolean
+
+  @hasOne(() => Estado,{
+    foreignKey: "id",
+    localKey: "estado_id"
+  })
+  public estado: HasOne<typeof Estado>;
+
+  @manyToMany(() => Estabelecimento,{
+    pivotTable: "cidades_estabelecimentos",
+    localKey: "id",
+    pivotForeignKey: "cidade_id",
+    relatedKey: "id",
+    pivotRelatedForeignKey: "estabelecimento_id",
+  })
+  public estabelecimento: ManyToMany<typeof Estabelecimento>;
 }

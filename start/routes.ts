@@ -1,16 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
-//Login para os tres tipos de user
-Route.post('/login',"AuthController.login");
-Route.post('/logout',"AuthController.logout");
-
-Route.post('/cliente/cadastro',"ClientesController.store");
-
-Route.group(()=>{
-  Route.get('/auth/me',"AuthController.me");
-  Route.put('/cliente',"ClientesController.update");
-}).middleware("auth");
-
+//Rota home publica
 Route.get('/', async () => {
   return { 
     name: 'api-hortifruit',
@@ -18,3 +8,22 @@ Route.get('/', async () => {
     developer: 'charlesonline' 
   }
 });
+
+//Login para os tres tipos de user
+Route.post('/login',"AuthController.login");
+//Logout
+Route.post('/logout',"AuthController.logout");
+
+//Cadastro publico de cliente e usuario
+Route.post('/cliente/cadastro',"ClientesController.store");
+
+Route.get('/cidades',"CidadesController.index");
+Route.get('/cidades/:id/estabelecimentos',"CidadesController.Estabelecimentos");
+
+//Grupo de rotas que necessita estar logado
+Route.group(()=>{
+  //obtem o usuário atual
+  Route.get('/auth/me',"AuthController.me");
+  //Edição de cliente e usuário
+  Route.put('/cliente',"ClientesController.update");
+}).middleware("auth");
