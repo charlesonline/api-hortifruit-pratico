@@ -24,47 +24,47 @@ export default class extends BaseSeeder {
       });
     }
 
-    for (let i = 1; i <= 20; i++) {
-      const uf = await Estado.create(
-        {
-          nome: "Estado "+ i,
-          uf: "E"+i
-        }
-      );
+    // for (let i = 1; i <= 20; i++) {
+    //   const uf = await Estado.create(
+    //     {
+    //       nome: "Estado "+ i,
+    //       uf: "E"+i
+    //     }
+    //   );
 
-      await Cidade.create(
-        {
-          nome: "Cidade "+i,
-          estado_id: uf.id
-        }
-      );
-    }
-    // await Estado.createMany([
-    //   {
-    //     nome: "Minas Gerais",
-    //     uf: "MG"
-    //   },
-    //   {
-    //     nome: "Espirito Santo",
-    //     uf: "ES"
-    //   }
-    // ]);
+    //   await Cidade.create(
+    //     {
+    //       nome: "Cidade "+i,
+    //       estado_id: uf.id
+    //     }
+    //   );
+    // }
+    await Estado.createMany([
+      {
+        nome: "Minas Gerais",
+        uf: "MG"
+      },
+      {
+        nome: "Espirito Santo",
+        uf: "ES"
+      }
+    ]);
 
-    // await Cidade.createMany([
-    //   {
-    //     nome: "Aimorés",
-    //     estado_id: 1
-    //   },
-    //   {
-    //     nome: "Colatina",
-    //     estado_id: 2
-    //   }
-    // ]);
+    await Cidade.createMany([
+      {
+        nome: "Aimorés",
+        estado_id: 1
+      },
+      {
+        nome: "Colatina",
+        estado_id: 2
+      }
+    ]);
 
-    for (let i = 1; i <= 18; i++) {
+    for (let i = 3; i <= 20; i++) {
       await CidadesEstabelecimento.create(
         {
-          cidade_id: i,
+          cidade_id: faker.number.int({min:1,max:2}),
           estabelecimento_id: i,
           custo_entrega: faker.number.float({min:1,max:20,precision:0.01})
         }
