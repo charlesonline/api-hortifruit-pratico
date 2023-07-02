@@ -24,6 +24,12 @@ Route.get('/cidades/:id/estabelecimentos',"CidadesController.Estabelecimentos");
 Route.group(()=>{
   //obtem o usuário atual
   Route.get('/auth/me',"AuthController.me");
+
+  //get(index), post(store), put(update), delete(destroy) - Endereços
+  Route.resource('/enderecos',"EnderecosController").only([
+    "store","index","update","destroy"
+  ]);
+
   //Edição de cliente e usuário
   Route.put('/cliente',"ClientesController.update");
 }).middleware("auth");

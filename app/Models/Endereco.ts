@@ -1,5 +1,6 @@
 // import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, HasOne, column, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import Cidade from './Cidade'
 
 export default class Endereco extends BaseModel {
   @column({ isPrimary: true })
@@ -26,9 +27,9 @@ export default class Endereco extends BaseModel {
   @column()
   public complemento: string | null
 
-  // @column.dateTime({ autoCreate: true })
-  // public createdAt: DateTime
-
-  // @column.dateTime({ autoCreate: true, autoUpdate: true })
-  // public updatedAt: DateTime
+  @hasOne(() => Cidade,{
+    localKey:"cidadeId",
+    foreignKey:"id"
+  })
+  public cidade: HasOne<typeof Cidade>
 }
