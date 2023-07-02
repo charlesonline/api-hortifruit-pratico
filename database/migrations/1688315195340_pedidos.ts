@@ -14,7 +14,7 @@ export default class extends BaseSchema {
       table.decimal('valor',10,2).notNullable();
       table.decimal('troco_para',10,2).nullable();
       table.decimal('custo_entrega',10,2).notNullable().defaultTo(0);
-      table.string("observacao").notNullable();
+      table.string("observacao").nullable();
       table.timestamp('created_at').notNullable();
     })
   }
