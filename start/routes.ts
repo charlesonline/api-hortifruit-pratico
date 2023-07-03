@@ -20,6 +20,8 @@ Route.post('/cliente/cadastro',"ClientesController.store");
 Route.get('/cidades',"CidadesController.index");
 Route.get('/cidades/:id/estabelecimentos',"CidadesController.Estabelecimentos");
 
+Route.get('/estabelecimento/:id',"EstabelecimentosController.show");
+
 //Grupo de rotas que necessita estar logado
 Route.group(()=>{
   //obtem o usuário atual
