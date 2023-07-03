@@ -30,6 +30,9 @@ Route.group(()=>{
     "store","index","update","destroy"
   ]);
 
+  //PEGA OS PEDIDOS DO ESTABELECIMENTO
+  Route.get("/estabelecimento/pedidos","EstabelecimentosController.pedidos");
+
   //Edição de cliente e usuário
   Route.put('/cliente',"ClientesController.update");
 }).middleware("auth");

@@ -1,5 +1,7 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, HasMany, HasOne, column, hasMany, hasOne } from '@ioc:Adonis/Lucid/Orm'
+import Cliente from './Cliente'
+import PedidoStatus from './PedidoStatus'
 
 export default class Pedido extends BaseModel {
   @column({ isPrimary: true, serializeAs: null })
@@ -34,4 +36,16 @@ export default class Pedido extends BaseModel {
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
+
+  @hasOne(() => Cliente, {
+    localKey: "cliente_id",
+    foreignKey: "id"
+  })
+  public cliente: HasOne<typeof Cliente>
+
+  @hasMany(() => PedidoStatus, {
+    localKey: "id",
+    foreignKey: "pedido_id"
+  })
+  public pedido_status: HasMany<typeof PedidoStatus>
 }
