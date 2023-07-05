@@ -32,6 +32,9 @@ Route.group(()=>{
     "store","index","update","destroy"
   ]);
 
+  Route.post('/pedidos',"PedidosController.store");
+  Route.get('/pedidos',"PedidosController.index");
+
   //PEGA OS PEDIDOS DO ESTABELECIMENTO
   Route.get("/estabelecimento/pedidos","EstabelecimentosController.pedidos");
 

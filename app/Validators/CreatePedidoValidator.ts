@@ -5,14 +5,19 @@ export default class CreatePedidoValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   public schema = schema.create({
+
     estabelecimento_id: schema.number([
       rules.exists({table: 'estabelecimentos', column: 'id'}),
     ]),
+
     meio_pagamento: schema.number([
       rules.exists({table:'meios_pagamentos', column: 'id'}),
     ]),
+
     troco_para: schema.number.nullableAndOptional(),
+
     observacao: schema.string.nullableAndOptional({trim: true}),
+
     produtos: schema.array([rules.minLength(1)]).members(
       schema.object().members({
         produto_id: schema.number([
@@ -22,9 +27,11 @@ export default class CreatePedidoValidator {
         observacao: schema.string.nullableAndOptional({trim: true}),
       })
     ),
+
     endereco_id: schema.number([
       rules.exists({table: 'enderecos', column: 'id'}),
     ]),
+    
   })
 
   public messages: CustomMessages = {}
