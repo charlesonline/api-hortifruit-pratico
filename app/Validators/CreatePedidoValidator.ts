@@ -10,7 +10,7 @@ export default class CreatePedidoValidator {
       rules.exists({table: 'estabelecimentos', column: 'id'}),
     ]),
 
-    meio_pagamento: schema.number([
+    meios_pagamento_id: schema.number([
       rules.exists({table:'meios_pagamentos', column: 'id'}),
     ]),
 

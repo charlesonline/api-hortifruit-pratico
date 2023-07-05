@@ -13,16 +13,16 @@ var randomstring = require("randomstring");
 
 export default class PedidosController {
 
-    public async store ({request, response, auth}: HttpContextContract) {
+    public async store({ request, response, auth }: HttpContextContract) {
         const payload = await request.validate(CreatePedidoValidator);
 
         const userAuth = await auth.use("api").authenticate();
         const cliente = await Cliente.findByOrFail("user_id", userAuth.id);
 
-        let hash_ok:boolean = false;
-        let hash_id:string = "";
+        let hash_ok: boolean = false;
+        let hash_id: string = "";
 
-        while ( hash_ok == false ) {
+        while (hash_ok == false) {
             hash_id = randomstring.generate({
                 length: 6,
                 charset: "alphanumeric",
@@ -30,7 +30,7 @@ export default class PedidosController {
             });
 
             const hash = await Pedido.findBy("hash_id", hash_id);
-            if ( hash == null ) {
+            if (hash == null) {
                 hash_ok = true;
             }
         }
@@ -38,7 +38,7 @@ export default class PedidosController {
         //TRANSLATION CRIADO
         const trx = await Database.transaction();
 
-        const endereco = await Endereco.findByOrFail("id",payload.endereco_id)
+        const endereco = await Endereco.findByOrFail("id", payload.endereco_id)
 
         try {
             const end = await PedidoEndereco.create({
@@ -47,26 +47,28 @@ export default class PedidosController {
                 numero: endereco.numero,
                 bairro: endereco.bairro,
                 ponto_referencia: endereco.ponto_referencia,
-                complemento:endereco.complemento
+                complemento: endereco.complemento
             });
 
             //BUSCA DO CUSTO DE ENTREGA E CALCULAR O VALOR TOTAL
             const estabelecimento = await CidadesEstabelecimento.query()
-            .where("estabelecimento_id",payload.estabelecimento_id)
-            .where("cidade_id",endereco.cidadeId)
-            .firstOrFail();
+                .where("estabelecimento_id", payload.estabelecimento_id)
+                .where("cidade_id", endereco.cidadeId)
+                .firstOrFail();
 
             let valorTotal = 0;
             for await (const produto of payload.produtos) {
-                const prod = await Produto.findByOrFail("id",produto.produto_id);
+                const prod = await Produto.findByOrFail("id", produto.produto_id);
                 valorTotal += prod.preco * produto.quantidade;
             }
 
             valorTotal = valorTotal + estabelecimento.custo_entrega;
 
-            valorTotal = parseFloat(valorTotal.toFixed(2));
+            // valorTotal = parseFloat(valorTotal.toFixed(2));
+            // valorTotal = valorTotal.toFixed(2);
+            // valorTotal = parseFloat(valorTotal);
 
-            if ( payload.troco_para != null && payload.troco_para < valorTotal ) {
+            if (payload.troco_para != null && payload.troco_para < valorTotal) {
                 trx.rollback();
                 return response.badRequest("O valor do troco não pode ser menor que o valor total do pedido.");
             }
@@ -75,7 +77,7 @@ export default class PedidosController {
                 hash_id: hash_id,
                 cliente_id: cliente.id,
                 estabelecimento_id: payload.estabelecimento_id,
-                meios_pagamento_id: payload.meio_pagamento,
+                meios_pagamento_id: payload.meios_pagamento_id,
                 pedido_endereco_id: end.id,
                 valor: valorTotal,
                 troco_para: payload.troco_para,
@@ -84,7 +86,7 @@ export default class PedidosController {
             });
 
             payload.produtos.forEach(async (produto) => {
-                let getProduto = await Produto.findByOrFail("id",produto.produto_id);
+                let getProduto = await Produto.findByOrFail("id", produto.produto_id);
 
                 await PedidoProduto.create({
                     pedido_id: pedido.id,
@@ -103,11 +105,50 @@ export default class PedidosController {
             //Confirma a transação
             await trx.commit();
 
-            return response.created({pedido});
+            return response.created({ pedido });
         } catch (error) {
             await trx.rollback();
-            return response.badRequest("Something went wrong");
+            return response.badRequest("ERRO CHARLES " + error);
         }
+    }
+
+    public async index({ response, auth }: HttpContextContract) {
+        const userAuth = await auth.use("api").authenticate();
+        const cliente = await Cliente.findByOrFail("user_id", userAuth.id);
+
+        const pedidos = await Pedido.query()
+            .where("cliente_id", cliente.id)
+            .preload("estabelecimento")
+            .preload("pedido_status", (statusQuery) => {
+                statusQuery.preload("status");
+            })
+            .orderBy("id", "desc")
+
+        return response.ok(pedidos);
+
+    }
+
+    public async show({ params, response, auth }: HttpContextContract) {
+        const idPedido = params.hash_id;
+
+        const pedido = await Pedido.query()
+            .where("hash_id", idPedido)
+            .preload("produtos", (produtoQuery) => {
+                produtoQuery.preload("produto");
+            })
+            .preload("cliente")
+            .preload("endereco")
+            .preload("estabelecimento")
+            .preload("meio_pagamento")
+            .preload("pedido_status", (statusQuery) => {
+                statusQuery.preload("status");
+            }).first();
+
+        if (pedido == null) {
+            return response.notFound("Pedido não encontrado!");
+        }
+
+        return response.ok(pedido);
     }
 
 }

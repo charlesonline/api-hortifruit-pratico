@@ -8,7 +8,7 @@ import User from 'App/Models/User';
 
 export default class extends BaseSeeder {
   public async run () {
-    for (let index = 3; index <= 20; index++) {
+    for (let index = 1; index <= 20; index++) {
       const user = await User.create({
         email: 'estabelecimento'+index+'@email.com',
         password: '123456',
@@ -61,7 +61,7 @@ export default class extends BaseSeeder {
       }
     ]);
 
-    for (let i = 3; i <= 20; i++) {
+    for (let i = 1; i <= 20; i++) {
       await CidadesEstabelecimento.create(
         {
           cidade_id: faker.number.int({min:1,max:2}),
