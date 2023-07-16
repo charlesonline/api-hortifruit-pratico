@@ -27,7 +27,7 @@ export default class Estabelecimento extends BaseModel {
 
   @hasMany(() => Categoria, {
     localKey: "id",
-    foreignKey: "esabelecimento_id"
+    foreignKey: "estabelecimento_id"
   })
   public categorias: HasMany<typeof Categoria>
 
@@ -36,7 +36,7 @@ export default class Estabelecimento extends BaseModel {
     localKey: "id",
     pivotForeignKey: "estabelecimento_id",
     relatedKey: "id",
-    pivotRelatedForeignKey: "meio_pagamento_id"
+    pivotRelatedForeignKey: "meios_pagamento_id"
   })
   public meiospagamento: ManyToMany<typeof MeiosPagamento>
 }

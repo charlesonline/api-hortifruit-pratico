@@ -1,0 +1,15 @@
+version: '3'
+services:
+  db:
+    image: mysql:latest
+    container_name: hortifruit-db
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: your_root_password
+      MYSQL_DATABASE: projeto_hortifruit
+      MYSQL_USER: hortifruit_user
+      MYSQL_PASSWORD: your_user_password
+    volumes:
+      - ./data:/var/lib/mysql
+    ports:
+      - 3306:3306

@@ -24,7 +24,7 @@ export default class Cidade extends BaseModel {
   @manyToMany(() => Estabelecimento,{
     pivotTable: "cidades_estabelecimentos",
     localKey: "id",
-    pivotForeignKey: "cidadeId",
+    pivotForeignKey: "cidade_id",
     relatedKey: "id",
     pivotRelatedForeignKey: "estabelecimento_id",
   })
