@@ -35,7 +35,7 @@ export default class PedidosController {
             }
         }
 
-        //TRANSLATION CRIADO
+        //TRANSACTION CRIADO
         const trx = await Database.transaction();
 
         const endereco = await Endereco.findByOrFail("id", payload.endereco_id)

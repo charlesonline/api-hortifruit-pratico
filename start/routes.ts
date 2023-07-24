@@ -1,6 +1,6 @@
 import Route from '@ioc:Adonis/Core/Route'
 
-//Rota home publica
+//Rota home
 Route.get('/', async () => {
   return { 
     name: 'api-hortifruit',
@@ -11,6 +11,7 @@ Route.get('/', async () => {
 
 //Login para os tres tipos de user
 Route.post('/login',"AuthController.login");
+
 //Logout
 Route.post('/logout',"AuthController.logout");
 
